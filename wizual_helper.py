@@ -2,9 +2,12 @@ import math
 import csv
 
 def read_csv(path):
-    with open(path, newline='') as f:
-        reader = csv.reader(f)
-        rows = list(reader)
+    try:
+        with open(path, newline='') as f:
+            reader = csv.reader(f)
+            rows = list(reader)
+    except Exception as e:
+        raise IOError(f"Error reading CSV file at {path}: {e}")
     if not rows:
         return Table(rows=0, cols=0)
     headers = rows[0]
@@ -107,21 +110,40 @@ class Table:
         if isinstance(other, Table):
             self._check_shape(other)
             t = Table(self.rows, self.cols, self.headers)
-            t.data = [[self.data[i][j] / other.data[i][j] for j in range(self.cols)]
-                      for i in range(self.rows)]
+            t.data = []
+            for i in range(self.rows):
+                new_row = []
+                for j in range(self.cols):
+                    try:
+                        new_row.append(self.data[i][j] / other.data[i][j])
+                    except ZeroDivisionError:
+                        raise ZeroDivisionError(f"Division by zero at cell [{i}][{j}]")
+                t.data.append(new_row)
             return t
         if isinstance(other, (int, float)):
+            if other == 0:
+                raise ZeroDivisionError("Division by zero for scalar division.")
             t = Table(self.rows, self.cols, self.headers)
-            t.data = [[self.data[i][j] / other for j in range(self.cols)]
-                      for i in range(self.rows)]
+            t.data = []
+            for i in range(self.rows):
+                new_row = []
+                for j in range(self.cols):
+                    new_row.append(self.data[i][j] / other)
+                t.data.append(new_row)
             return t
         return NotImplemented
 
     def __rtruediv__(self, other):
         if isinstance(other, (int, float)):
             t = Table(self.rows, self.cols, self.headers)
-            t.data = [[other / self.data[i][j] for j in range(self.cols)]
-                      for i in range(self.rows)]
+            t.data = []
+            for i in range(self.rows):
+                new_row = []
+                for j in range(self.cols):
+                    if self.data[i][j] == 0:
+                        raise ZeroDivisionError(f"Division by zero at cell [{i}][{j}] in reverse division.")
+                    new_row.append(other / self.data[i][j])
+                t.data.append(new_row)
             return t
         return NotImplemented
 
