@@ -326,8 +326,23 @@ def line_chart_table(table):
     plt.show()
 
 def main():
-    y=Table(rows=5,cols=5)
-    print(Table(rows=y.rows, cols=len(['1', '4']), headers=['1', '4'], data=[[row[y.headers.index(c)] for c in ['1', '4']] for row in y.data]))
+    x=5
+    y=3.2
+    z=[1, 2, 3]
+    a=[2.3, 3.14, 2.71]
+    b=[2, 3, 4, 5]
+    c=Table(rows=0,cols=3)
+    c.append_row([1, 2, 3])
+    c.append_row([4, 3, 2])
+    c.append_row([5, 6, 7])
+    print(((x+y) if not isinstance(x, list) and not isinstance(y, list) else ([a+b for a,b in zip(x,y)] if isinstance(x, list) and isinstance(y, list) else ([elem+y for elem in x] if isinstance(x, list) else ([x+elem for elem in y])))))
+    print(((y+z) if not isinstance(y, list) and not isinstance(z, list) else ([a+b for a,b in zip(y,z)] if isinstance(y, list) and isinstance(z, list) else ([elem+z for elem in y] if isinstance(y, list) else ([y+elem for elem in z])))))
+    print(((z+y) if not isinstance(z, list) and not isinstance(y, list) else ([a+b for a,b in zip(z,y)] if isinstance(z, list) and isinstance(y, list) else ([elem+y for elem in z] if isinstance(z, list) else ([z+elem for elem in y])))))
+    print(((z+a) if not isinstance(z, list) and not isinstance(a, list) else ([a+b for a,b in zip(z,a)] if isinstance(z, list) and isinstance(a, list) else ([elem+a for elem in z] if isinstance(z, list) else ([z+elem for elem in a])))))
+    print(((a+b) if not isinstance(a, list) and not isinstance(b, list) else ([a+b for a,b in zip(a,b)] if isinstance(a, list) and isinstance(b, list) else ([elem+b for elem in a] if isinstance(a, list) else ([a+elem for elem in b])))))
+    print(((b+c) if not isinstance(b, list) and not isinstance(c, list) else ([a+b for a,b in zip(b,c)] if isinstance(b, list) and isinstance(c, list) else ([elem+c for elem in b] if isinstance(b, list) else ([b+elem for elem in c])))))
+    d=[c, a]
+    print(sum(d))
 
 if __name__=="__main__":
     main()
